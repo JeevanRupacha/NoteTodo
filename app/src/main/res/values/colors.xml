@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<color name="colorPrimary">#3F51B5</color>
-<color name="colorPrimaryDark">#3F51B5</color>
-<color name="colorAccent">#03DAC5</color>
-<color name="success_color">#376e37</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#00BCD4</color>
+    <color name="colorAccent">#03DAC5</color>
+
+
+    <color name="success_color">#376e37</color>
+    <color name="colorPrimaryLight">#C5CAE9</color>
+
+    <!-- colors note and todo_ priority selection -->
+    <color name="materialRed">#E74C3C</color>
+    <color name="materialOrange">#E67E22</color>
+    <color name="materialGrass">#4CAF50</color>
+
+    <color name="xxlightGray">#F5F8FA</color>
+
+    <color name="ToolbarTextColor">#00000F</color>
+
+
+    //back color 5 group
+    <color name="YassQueen">#ff1d58</color>
+    <color name="SisterSister">#f75990</color>
+    <color name="CrownYellow">#fff685</color>
+    <color name="BlueLight">#00DDFF</color>
+    <color name="BrutalBlue">#0049B7</color>
+
 </resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/date_and_time_linearlayout">
+
+
+        <TextView
+            android:id="@+id/time_show_textview"
+            android:gravity="bottom"
+            style="@style/text_view_date_time"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/timer_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_gravity="end"
+            android:tint="#321A12"
+            android:contentDescription="timer Image"
+            android:onClick="showTimePickerDialog"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_baseline_timer_24"
+            tools:srcCompat="@drawable/ic_baseline_timer_24" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/date_and_time_linearlayout">
+
+        <TextView
+            android:id="@+id/date_show_textview"
+            android:text="10 : 12"
+            android:gravity="start"
+            style="@style/text_view_date_time"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/date_imageView"
+            android:layout_width="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_gravity="end"
+            android:scaleType="center"
+            android:tint="#531B17"
+            android:layout_height="match_parent"
+            android:onClick="showDatePickerDialog"
+            android:contentDescription="date calender image"
+
+            app:srcCompat="@drawable/ic_baseline_calendar_today_24"
+            tools:srcCompat="@drawable/ic_baseline_calendar_today_24" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

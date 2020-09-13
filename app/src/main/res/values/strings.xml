@@ -9,5 +9,20 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="item_list_title">TextView</string>
+    <string name="item_list_title">this is for test lorem ipsum </string>
+    <string name="Todo_label">Todo</string>
+    <string name="note_label">Note</string>
+    <string name="signin">Signin</string>
+    <string name="cancel" />
+    <string name="scheduler_label">Schedule Notification</string>
+    <string name="priority_low_label">Low</string>
+    <string name="priority_medium_label">Medium</string>
+    <string name="priority_high_label">High</string>
+    <string name="save_label">Save</string>
+    <string name="my_fragment_title">Todo Undone</string>
+    <string name="right_frament_title">Todo Done</string>
+    <string name="first_frament_title">"Today Todo "</string>
+    <string name="notodo_label">Not Todo</string>
+    <string name="navigation_drawer_open">drawer_open</string>
+    <string name="navigation_drawer_close">drawer_close</string>
 </resources>

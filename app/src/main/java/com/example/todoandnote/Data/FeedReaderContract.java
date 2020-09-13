@@ -13,16 +13,16 @@ public final class FeedReaderContract {
         public static final String DATABASE_NAME ="NoteTodo_database";
 
         //DataType
-        public static final String TODO= "todo";
-        public static final String TODO_UNDONE = "todo_undone";
-        public static final String TODO_DONE = "todo_done";
-        public static final String TODO_HISTORY = "todo_history";
-        public static final String NOTODO = "notodo";
-        public static final String NOTODO_DONE = "notodo_done";
-        public static final String NOTODO_UNDONE = "notodo_undone";
+        public static final String DATATYPE_TODO = "todo";
+        public static final String DATATYPE_TODO_UNDONE = "todo_undone";
+        public static final String DATATYPE_TODO_DONE = "todo_done";
+        public static final String DATATYPE_TODO_TODO_HISTORY = "todo_history";
+        public static final String DATATYPE_TODO_NOTODO = "notodo";
+        public static final String DATATYPE_TODO_NOTODO_DONE = "notodo_done";
+        public static final String DATATYPE_TODO_NOTODO_UNDONE = "notodo_undone";
 
         //database version
-        public static final int DATABASE_VERSION = 1;
+        public static final int DATABASE_VERSION = 6;
 
     }
 }
