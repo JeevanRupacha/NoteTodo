@@ -25,4 +25,10 @@
     <string name="notodo_label">Not Todo</string>
     <string name="navigation_drawer_open">drawer_open</string>
     <string name="navigation_drawer_close">drawer_close</string>
+    <string name="menu_home" />
+    <string name="menu_gallery">GAllery</string>
+    <string name="menu_slideshow">SlideShow</string>
+    <string name="about_us">About us</string>
+    <string name="more_l">More</string>
+    <string name="not_todo_l">Not Todo</string>
 </resources>

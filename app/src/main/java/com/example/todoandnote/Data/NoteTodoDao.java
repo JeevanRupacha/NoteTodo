@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -22,8 +23,10 @@ public interface NoteTodoDao {
     @Query("DELETE FROM " + FeedReaderContract.FeedEntry.TABLE_NAME + " WHERE DataType =:dataType" )
     void delete(String dataType);
 
-    @Query("UPDATE "+ FeedReaderContract.FeedEntry.TABLE_NAME + " SET Content =:content WHERE NoteTodoId =:id")
-    void updateData(String content, int id);
+//    @Query("UPDATE "+ FeedReaderContract.FeedEntry.TABLE_NAME + " SET Content =:content, priority =:priority,schedulerTimeBool = :isScheduler WHERE NoteTodoId =:id")
+    @Update
+    void updateData(NoteTodo noteTodo);
+//    void updateData(String content,boolean isScheduler,int priority, int id);
 
     @Query("UPDATE "+ FeedReaderContract.FeedEntry.TABLE_NAME + " SET DataType =:dataType WHERE NoteTodoId =:id")
     void changeDataType(String dataType , int id);

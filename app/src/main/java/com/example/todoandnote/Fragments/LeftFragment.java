@@ -1,8 +1,10 @@
 package com.example.todoandnote.Fragments;
 
+import android.animation.LayoutTransition;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -10,22 +12,29 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.todoandnote.Data.FeedReaderContract;
 import com.example.todoandnote.Data.NoteTodo;
 import com.example.todoandnote.Data.NoteTodoViewModel;
+import com.example.todoandnote.GestureDetector.GestureListener;
 import com.example.todoandnote.R;
 import com.example.todoandnote.Ui.RecyclerView.TodoDoneRecyclerViewAdapter;
-import com.example.todoandnote.Ui.RecyclerView.TodoRecyclerViewAdapter;
+import com.example.todoandnote.Utils.MainActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LeftFragment extends Fragment implements RoomModelSetup {
+
+
+    //layout animation for layout update or changes
+    LayoutTransition transition = new LayoutTransition();
 
     //ViewModel NoteTodo architecture View model
     private static NoteTodoViewModel noteTodoViewModel;
@@ -43,6 +52,9 @@ public class LeftFragment extends Fragment implements RoomModelSetup {
     //for log out to debug
     private final static String TAG = "LeftFragment";
 
+    //gesture listener
+    private GestureDetectorCompat mGesture;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -52,26 +64,39 @@ public class LeftFragment extends Fragment implements RoomModelSetup {
 
         // Inflate the layout for this fragment
         fragmentView = (ViewGroup)inflater.inflate(R.layout.fragment_left, container, false);
+        mGesture = new GestureDetectorCompat(getActivity(), new GestureListener(getContext()));
+        fragmentView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGesture.onTouchEvent(event);
+                return true;
+            }
+        });
         return fragmentView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//creating viewModel object
+        //creating viewModel object
         noteTodoViewModel = new ViewModelProvider(this).get(NoteTodoViewModel.class);
 
         //initializing the todoList arrayList object
         noteTodoList = new ArrayList<>();
 
         //creating for observer in the ViewModel
-        observerSetup();
+        observerSetup(FeedReaderContract.FeedEntry.DATATYPE_TODO);
 
         //creating recycler view
         recyclerSetup();
 
         //listener for data change through the live data ViewModel
         listenerSetup();
+
+        //show all the nav and toolbar for left fragment at first shown
+        MainActivityUtils.showNavButtonView();
+        MainActivityUtils.showFab();
+        MainActivityUtils.showAppBarLayout();
 
     }
 
@@ -83,20 +108,41 @@ public class LeftFragment extends Fragment implements RoomModelSetup {
         ActionBar actionBar = activity.getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle(R.string.my_fragment_title);
+
+        MainActivityUtils.showNavButtonView();
+        MainActivityUtils.showFab();
+        MainActivityUtils.showAppBarLayout();
+
     }
 
     @Override
-    public void observerSetup() {
-        // View Model setting up observer for view Model
-        noteTodoViewModel.getTodoUndone().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
+    public void observerSetup(String dataType ) {
 
-            @Override
-            public void onChanged(List<NoteTodo> noteTodo) {
-                Log.d(TAG, "onChanged: " + noteTodo.size());
-                Toast.makeText(getContext(), " data test " + noteTodo.size(), Toast.LENGTH_SHORT).show();
-                ((TodoDoneRecyclerViewAdapter) mAdapter).setNoteTodo(noteTodo);
-            }
-        });
+        if(dataType.equals(FeedReaderContract.FeedEntry.DATATYPE_TODO))
+        {
+            // View Model setting up observer for view Model
+            noteTodoViewModel.getTodoUndone().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
+
+                @Override
+                public void onChanged(List<NoteTodo> noteTodo) {
+                    Log.d(TAG, "onChanged: " + noteTodo.size());
+                    Toast.makeText(getContext(), " data test " + noteTodo.size(), Toast.LENGTH_SHORT).show();
+                    ((TodoDoneRecyclerViewAdapter) mAdapter).setNoteTodo(noteTodo);
+                }
+            });
+        }else if(dataType.equals(FeedReaderContract.FeedEntry.DATATYPE_TODO_NOTODO))
+        {
+            // View Model setting up observer for view Model
+            noteTodoViewModel.getNoTodoUndone().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
+
+                @Override
+                public void onChanged(List<NoteTodo> noteTodo) {
+                    Log.d(TAG, "onChanged: " + noteTodo.size());
+                    Toast.makeText(getContext(), " data test " + noteTodo.size(), Toast.LENGTH_SHORT).show();
+                    ((TodoDoneRecyclerViewAdapter) mAdapter).setNoteTodo(noteTodo);
+                }
+            });
+        }
     }
 
     @Override
@@ -107,8 +153,17 @@ public class LeftFragment extends Fragment implements RoomModelSetup {
     @Override
     public void recyclerSetup() {
         recyclerView =  fragmentView.findViewById(R.id.not_done_recyclerView);
+
+        //setup for gesture listener
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGesture.onTouchEvent(event);
+                return false;
+            }
+        });
+
         mAdapter = new TodoDoneRecyclerViewAdapter(getActivity().getApplicationContext());
-        recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);

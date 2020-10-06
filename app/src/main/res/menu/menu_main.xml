@@ -3,4 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.todoandnote.Activities.MainActivity">
 
+    <item android:id="@+id/note_menu"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_event_note_24"
+        app:iconTint="#D20049B7"
+        android:iconTint="#D20049B7"
+        android:title=""/>
+
+    <item
+        app:showAsAction="never"
+        android:title="@string/action_settings" />
+
+    <item
+        app:showAsAction="never"
+        android:title="@string/about_us"/>
 </menu>

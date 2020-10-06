@@ -45,10 +45,10 @@ public class NoteTodoRepository
         new NoteTodoAsyncTask<String>(noteTodoDao, "deleteByDatatype").execute(dataType);
     }
 
-    public void updateData(String content, int id)
+    public void updateData(NoteTodo noteTodo)
     {
-        String strId = String.valueOf(id);
-        new NoteTodoAsyncTask<String>(noteTodoDao, "updateData").execute(content,strId);
+//        String strId = String.valueOf(id);
+        new NoteTodoAsyncTask<NoteTodo>(noteTodoDao, "updateData").execute(noteTodo);
     }
 
     public void changeDataType(String dataType , int id)
@@ -112,7 +112,8 @@ public class NoteTodoRepository
                     break;
                 case "deleteByDatatype": noteTodoDao.delete((String)ts[0]);
                     break;
-                case "updateData": noteTodoDao.updateData((String) ts[0], Integer.valueOf((Integer) ts[1]));
+//                case "updateData": noteTodoDao.updateData((String) ts[0], Integer.valueOf((Integer) ts[1]));
+                case "updateData": noteTodoDao.updateData((NoteTodo)ts[0]);
                     break;
                 case "changeDataType":
                     Log.d("Repo", "doInBackground: " + ts[0] +" "+ ts[1]);

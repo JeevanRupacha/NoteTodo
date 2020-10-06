@@ -38,7 +38,7 @@
         android:layout_margin="10dp"
         android:paddingBottom="8dp"
         android:orientation="vertical"
-        android:background="@drawable/random_back_list3"
+        android:background="@drawable/random_back_list2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.842"

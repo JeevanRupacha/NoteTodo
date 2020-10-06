@@ -6,7 +6,7 @@ This interface is for code reduce as all the fragment has these three function c
  */
 
 public interface RoomModelSetup {
-     void observerSetup();
+     void observerSetup(String dataType);
     void listenerSetup();
     void recyclerSetup();
 }

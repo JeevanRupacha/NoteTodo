@@ -25,4 +25,17 @@
     <color name="BlueLight">#00DDFF</color>
     <color name="BrutalBlue">#0049B7</color>
 
+    //navigation
+    <color name="navigationTintColor">#AD00000F</color>
+    <color name="google_color1">#E8EAED</color>
+    <color name="google_color2">#E6C9A8</color>
+    <color name="google_color3">#FDCFE8</color>
+    <color name="google_color4">#D7AEFb</color>
+    <color name="google_color5">#AECBFA</color>
+    <color name="google_color6">#CBF0F8</color>
+    <color name="google_color7">#A7FFEB</color>
+    <color name="google_color8">#CCFF90</color>
+    <color name="google_color9">#FBBC04</color>
+    <color name="google_color10">#F28B82</color>
+
 </resources>

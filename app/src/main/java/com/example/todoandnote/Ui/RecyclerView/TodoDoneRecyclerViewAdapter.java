@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todoandnote.Data.NoteTodo;
@@ -22,10 +23,12 @@ import com.example.todoandnote.R;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class TodoDoneRecyclerViewAdapter extends RecyclerView.Adapter<TodoDoneRecyclerViewAdapter.TodoViewHolder>
+public class TodoDoneRecyclerViewAdapter extends
+        RecyclerView.Adapter<TodoDoneRecyclerViewAdapter.TodoViewHolder>
 {
     private static final String TAG = "TodoDone RecyclerView Adapter";
     private Context context;
@@ -36,19 +39,39 @@ public class TodoDoneRecyclerViewAdapter extends RecyclerView.Adapter<TodoDoneRe
     //oneDay time for grouping in day date
     private String oneDay;
 
+    //arrayList of color for seperation of the list by one day differ
+    private HashMap<String, Integer> colorHashMap;
+
+    //random number to track previous random value
+    private int preRandomVal = -1;
+
+    //index value for the color array
+    private int indexCol = 0;
+
+
     //random background list
     private  int[] randomBackgroundList = new int[]{
             R.drawable.random_back_list1
             ,R.drawable.random_back_list2
-            ,R.drawable.random_back_list3
-            , R.drawable.random_back_list5
-      };
+            ,R.drawable.random_back_list3,
+            R.drawable.random_back_list6,
+            R.drawable.random_back_list7,
+            R.drawable.random_back_list8,
+            R.drawable.random_back_list9,
+            R.drawable.random_back_list10,
+            R.drawable.random_back_list11,
+            R.drawable.random_back_list12,
+            R.drawable.random_back_list13,
+            R.drawable.random_back_list14,
+            R.drawable.random_back_list15,
 
-    private int randomColorId = randomBackgroundList[randomBackgroundList.length -1];
+    };
+
 
     public TodoDoneRecyclerViewAdapter(Context context)
     {
         this.context = context;
+        colorHashMap = new HashMap<>();
     }
 
     public void setNoteTodo(List<NoteTodo> noteTodoData)
@@ -75,30 +98,34 @@ public class TodoDoneRecyclerViewAdapter extends RecyclerView.Adapter<TodoDoneRe
         NoteTodo noteTodo = data.get(position);
 
         Date date = new Date(noteTodo.getAddedTime().getTime());
-        String strDate = date.toString();
+        String strDate = date.toString().trim();
+
+
+        Log.d("DATE", "onBindViewHolder: " + colorHashMap.get(strDate));
+
 
         String timeAgo = (String) DateUtils.getRelativeTimeSpanString(noteTodo
                 .getAddedTime().getTime());
 
-        assert oneDay != null;
-        if(TextUtils.isEmpty(oneDay))
-        {
-           oneDay = strDate;
-        }
+        Log.d(TAG, "Date test " + strDate);
+            if(colorHashMap.get(strDate) == null)
+            {
+                /***
+                 * generate color different if random color came in same twice again
+                 */
+                if(indexCol < randomBackgroundList.length)
+                {
+                    colorHashMap.put(strDate, randomBackgroundList[indexCol]);
+                    indexCol++;
+                }else{
+                    indexCol = 0;
+                    colorHashMap.put(strDate, randomBackgroundList[indexCol]);
+                    indexCol++;
+                }
+            }
 
-        if(!oneDay.equals(strDate))
-        {
-           //create new group for one day
-           //new date
-            Random rnd = new Random();
-            int randomNum = rnd.nextInt(randomBackgroundList.length);
-            randomColorId = randomBackgroundList[randomNum];
-            oneDay = strDate;
 
-        }
-
-
-        holder.linearLayout.setBackgroundResource(randomColorId);
+        holder.linearLayout.setBackgroundResource(colorHashMap.get(strDate));
         holder.content.setText(noteTodo.getContent());
         holder.dateAdded.setText(timeAgo);
         holder.itemView.setTag(noteTodo.getId());
@@ -107,11 +134,7 @@ public class TodoDoneRecyclerViewAdapter extends RecyclerView.Adapter<TodoDoneRe
 
     @Override
     public int getItemCount() {
-        if(data != null){
-            return data.size();
-        }
-
-        return 0;
+        return data == null ? 0 : data.size();
     }
 
 
@@ -133,6 +156,7 @@ public class TodoDoneRecyclerViewAdapter extends RecyclerView.Adapter<TodoDoneRe
             content =  itemView.findViewById(R.id.item_list_title);
             dateAdded = itemView.findViewById(R.id.date_added);
             linearLayout = itemView.findViewById(R.id.item_single_list_linearLayout);
+
         }
     }
 

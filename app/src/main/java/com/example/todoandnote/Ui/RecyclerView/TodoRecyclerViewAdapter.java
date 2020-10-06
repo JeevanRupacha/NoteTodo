@@ -7,6 +7,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todoandnote.Activities.AddNewTodoActivity;
@@ -29,7 +32,7 @@ import java.util.List;
 
 public class TodoRecyclerViewAdapter extends
         RecyclerView.Adapter<TodoRecyclerViewAdapter.TodoViewHolder>
-    implements AdapterView.OnItemClickListener
+
 {
     private static final String TAG = "RecyclerView Adapter";
     private static Context context;
@@ -90,8 +93,6 @@ public class TodoRecyclerViewAdapter extends
 
         holder.itemView.setTag(noteTodo.getId());
 
-
-
     }
 
     @Override
@@ -103,10 +104,6 @@ public class TodoRecyclerViewAdapter extends
         return 0;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(context, "item click", Toast.LENGTH_SHORT).show();
-    }
 
 
     public static class TodoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -127,6 +124,9 @@ public class TodoRecyclerViewAdapter extends
         //list container layout
         private LinearLayout linearLayout;
 
+        //gestureListener
+        private GestureDetectorCompat mGesture;
+
         public TodoViewHolder(@NonNull View itemView) {
             super(itemView);
             content =  itemView.findViewById(R.id.item_list_title);
@@ -136,10 +136,12 @@ public class TodoRecyclerViewAdapter extends
             linearLayout = itemView.findViewById(R.id.item_single_list_linearLayout);
             itemView.setOnClickListener(this);
 
+
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(View v)
+        {
             //update the data
 //            new FirstFragment().updateData((int)v.getTag());
             Intent intent = new Intent(context, AddNewTodoActivity.class);
@@ -147,6 +149,7 @@ public class TodoRecyclerViewAdapter extends
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 //            Log.d(TAG, "updateData: id is " + id);
+            Toast.makeText(context, "id "+(int)v.getTag(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -174,5 +177,7 @@ public class TodoRecyclerViewAdapter extends
 
         return colorId;
     }
+
+
 
 }

@@ -7,6 +7,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
@@ -19,9 +20,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -47,12 +50,20 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * This is the note todo_ or edit means update all todo_ by clicking in the list
+ * Activity. All the save after new created data are here
+ * This Activity is called after the floating add button is clicked and TODO_ is selected
+ *
+ */
+
 
 public class AddNewTodoActivity extends AppCompatActivity
 {
 
     //log out for debug
     private static final String TAG = "AddNewActivity";
+
 
     //the button which saves the all todo_ or update
     private Button saveButton;
@@ -65,6 +76,9 @@ public class AddNewTodoActivity extends AppCompatActivity
 
     //date and time picker for scheduler notification
     private static TextView dateTextView, timeTextView;
+
+    // id of TodoData came from intent for update
+    private int id = -1;
 
     //todo_ priority
     private int mPriority;
@@ -99,11 +113,6 @@ public class AddNewTodoActivity extends AppCompatActivity
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.setDrawerIndicatorEnabled(true);
-        toggle.syncState();
 
         //initializing the all views from edit_add_activity.xml
 //        saveButton = (Button) findViewById(R.id.save_todo_button);
@@ -122,18 +131,6 @@ public class AddNewTodoActivity extends AppCompatActivity
         //setting the default time and date for scheduler notification
         dateTextView.setText(DEFAULT_DATE);
         timeTextView.setText(DEFAULT_TIME);
-
-//        saveButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(TextUtils.isEmpty(inputText.getText().toString()))
-//                {
-//                    Toast.makeText(AddNewTodoActivity.this, "Input text is Empty", Toast.LENGTH_SHORT).show();
-//                }else {
-//                    addSaveButton();
-//                }
-//            }
-//        });
 
     }
 
@@ -159,9 +156,6 @@ public class AddNewTodoActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUpMenu() {
-
-    }
 
     @Override
     protected void onResume() {
@@ -172,7 +166,6 @@ public class AddNewTodoActivity extends AppCompatActivity
 
     private void setPreviousValues() {
         Bundle intent = getIntent().getExtras();
-        int id;
         if(intent != null)
         {
             id = intent.getInt("id");
@@ -211,7 +204,7 @@ public class AddNewTodoActivity extends AppCompatActivity
             case 2: ((RadioButton)findViewById(R.id.radio2)).setChecked(true);
             break;
 
-            case 3:((RadioButton)findViewById(R.id.radio1)).setChecked(true);
+            case 3: ((RadioButton)findViewById(R.id.radio1)).setChecked(true);
             break;
 
             default: break;
@@ -254,7 +247,6 @@ public class AddNewTodoActivity extends AppCompatActivity
         noteTodo.setDataType("todo");
         noteTodo.setPriority(mPriority);
 
-
         if(schedulerSwitch.isChecked())
         {
             //TODO insert meaning ful key for scheduler time
@@ -271,8 +263,27 @@ public class AddNewTodoActivity extends AppCompatActivity
 
        if(!TextUtils.isEmpty(content))
        {
+           if(id> -1)
+           {
+           //update data
+           noteTodo.setId(id);
+           FirstFragment.updateData(noteTodo);
+           }else
+           {
+           //new Data
            FirstFragment.insertData(noteTodo);
-           startActivity(new Intent(this, MainActivity.class));
+           }
+
+
+           //set default or clear all data after saved
+           inputText.setText("");
+           schedulerSwitch.setChecked(false);
+           dateTextView.setText(DEFAULT_DATE);
+           timeTextView.setText(DEFAULT_TIME);
+           mPriority = 3;
+
+
+           Toast.makeText(this, "Saved Success!", Toast.LENGTH_SHORT).show();
        }else{
            Toast.makeText(this, "Empty content ", Toast.LENGTH_SHORT).show();
        }
@@ -335,8 +346,6 @@ public class AddNewTodoActivity extends AppCompatActivity
             timeTextView.setText(DateTime.getTwelveHourFormatted(hourOfDay, minute));
         }
     }
-
-
 
 
 }

@@ -7,6 +7,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:background="@color/xxlightGray"
+    android:animateLayoutChanges="true"
 
     tools:context=".Fragments.LeftFragment">
 

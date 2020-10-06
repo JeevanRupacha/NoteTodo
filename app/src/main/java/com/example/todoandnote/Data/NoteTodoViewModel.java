@@ -38,9 +38,14 @@ public class NoteTodoViewModel extends AndroidViewModel {
         noteTodoRepository.deleteByDatatype(dataType);
     }
 
-    public void updateData(String content, int id)
+//    public void updateData(String content,boolean isScheduler,int priority, int id)
+//    {
+//        noteTodoRepository.updateData(content,isScheduler,priority, id);
+//    }
+
+    public void updateData(NoteTodo noteTodo)
     {
-        noteTodoRepository.updateData(content, id);
+        noteTodoRepository.updateData(noteTodo);
     }
 
     public void changeDataType(String dataType , int id)

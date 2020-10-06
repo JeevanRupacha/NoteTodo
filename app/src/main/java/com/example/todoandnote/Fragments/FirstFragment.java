@@ -1,7 +1,9 @@
 package com.example.todoandnote.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -26,8 +29,10 @@ import com.example.todoandnote.Activities.MainActivity;
 import com.example.todoandnote.Data.FeedReaderContract;
 import com.example.todoandnote.Data.NoteTodo;
 import com.example.todoandnote.Data.NoteTodoViewModel;
+import com.example.todoandnote.GestureDetector.GestureListener;
 import com.example.todoandnote.R;
 import com.example.todoandnote.Ui.RecyclerView.TodoRecyclerViewAdapter;
+import com.example.todoandnote.Utils.MainActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +42,13 @@ public class FirstFragment extends Fragment implements RoomModelSetup {
     //ViewModel NoteTodo architecture View model
     private static NoteTodoViewModel noteTodoViewModel;
 
-    private GestureDetector mGesture;
+    //private GestureDetectorCompat mGesture;
+    private GestureDetectorCompat mGesture;
 
     //first fragment or todo_section fragment
     private ViewGroup fragmentView;
 
+    //Recyclerview for the list of todo_ item
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -54,6 +61,15 @@ public class FirstFragment extends Fragment implements RoomModelSetup {
     //for log out to debug
     private final static String TAG = "FirstFragment";
 
+    //data Type for todo and nottodo
+    private static String dataType;
+
+
+    public FirstFragment(String dataType)
+    {
+        this.dataType =dataType;
+    }
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -62,6 +78,21 @@ public class FirstFragment extends Fragment implements RoomModelSetup {
     {
         // Inflate the layout for this fragment
         fragmentView = (ViewGroup)inflater.inflate(R.layout.fragment_first, container, false);
+
+        mGesture = new GestureDetectorCompat(getActivity(), new GestureListener(getContext()));
+        fragmentView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                 mGesture.onTouchEvent(event);
+                 return true;
+            }
+        });
+
+
+//        MainActivityUtils.hideNavButtonView();
+//        MainActivityUtils.hideFab();
+//        MainActivityUtils.hideAppBarLayout();
+
         return fragmentView;
     }
 
@@ -77,43 +108,65 @@ public class FirstFragment extends Fragment implements RoomModelSetup {
         allNoteTodo = new ArrayList<>();
 
         //creating for observer in the ViewModel
-        observerSetup();
+        observerSetup(dataType);
+
 
         //creating recycler view
         recyclerSetup();
 
-//        //calling the interaction to view
-//        listenerSetup();
+        //calling the interaction to view
+        listenerSetup();
+
 
     }
 
-
     @Override
-    public void observerSetup()
+    public void observerSetup(String dataType)
     {
-            // View Model setting up observer for view Model
-            noteTodoViewModel.getTodo().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
+      if(dataType.equals(FeedReaderContract.FeedEntry.DATATYPE_TODO))
+      {
+          // View Model setting up observer for view Model
+          noteTodoViewModel.getTodo().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
 
-            @Override
-            public void onChanged(List<NoteTodo> noteTodo) {
-                ((TodoRecyclerViewAdapter) mAdapter).setNoteTodo(noteTodo);
-            }
-        });
+              @Override
+              public void onChanged(List<NoteTodo> noteTodo) {
+                  ((TodoRecyclerViewAdapter) mAdapter).setNoteTodo(noteTodo);
+              }
+          });
 
-        noteTodoViewModel.getAllData().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
+          noteTodoViewModel.getAllData().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
 
-            @Override
-            public void onChanged(List<NoteTodo> noteTodo) {
-                allNoteTodo.addAll(noteTodo);
-            }
-        });
+              @Override
+              public void onChanged(List<NoteTodo> noteTodo) {
+                  allNoteTodo.addAll(noteTodo);
+              }
+          });
+      }else if(dataType.equals(FeedReaderContract.FeedEntry.DATATYPE_TODO_NOTODO))
+      {
+          // View Model setting up observer for view Model
+          noteTodoViewModel.getNoTodo().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
+
+              @Override
+              public void onChanged(List<NoteTodo> noteTodo) {
+                  ((TodoRecyclerViewAdapter) mAdapter).setNoteTodo(noteTodo);
+              }
+          });
+
+          noteTodoViewModel.getAllData().observe(getViewLifecycleOwner(), new Observer<List<NoteTodo>>() {
+
+              @Override
+              public void onChanged(List<NoteTodo> noteTodo) {
+                  allNoteTodo.addAll(noteTodo);
+              }
+          });
+      }
 
     }
 
     @Override
     public void listenerSetup()
     {
-        //implementing the swaping system
+        //implementing the swapping system
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT)
         {
             @Override
@@ -142,8 +195,6 @@ public class FirstFragment extends Fragment implements RoomModelSetup {
                     Toast.makeText(getContext(), "right", Toast.LENGTH_SHORT).show();
                 }
             }
-
-
         }).attachToRecyclerView(recyclerView);
 
     }
@@ -151,14 +202,27 @@ public class FirstFragment extends Fragment implements RoomModelSetup {
     @Override
     public void recyclerSetup() {
             recyclerView =  fragmentView.findViewById(R.id.todo_recyclerView);
+
+
+
+        //setup for gesture listener
+            recyclerView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mGesture.onTouchEvent(event);
+                    return false;
+                }
+            });
+
+
             mAdapter = new TodoRecyclerViewAdapter(getActivity().getApplicationContext());
-            recyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(mAdapter);
 
-            //set for data refresh after change data
-            mAdapter.notifyDataSetChanged();
+
+        //set for data refresh after change data
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -169,6 +233,7 @@ public class FirstFragment extends Fragment implements RoomModelSetup {
         ActionBar actionBar = activity.getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle(R.string.first_frament_title);
+
     }
 
     public static void insertData(NoteTodo noteTodo)
@@ -176,37 +241,72 @@ public class FirstFragment extends Fragment implements RoomModelSetup {
         noteTodoViewModel.insetData(noteTodo);
     }
 
-    public void updateData(int id )
+    public static void updateData(NoteTodo noteTodo)
     {
-
+        noteTodoViewModel.updateData(noteTodo);
     }
+
 
     public static List<NoteTodo> getAllTodo()
     {
         return allNoteTodo;
     }
 
-//    public class SimpleGestureListener extends GestureDetector.SimpleOnGestureListener {
-//
-//        @Override
-//        public boolean onDown(MotionEvent event) {
-//            // triggers first for both single tap and long press
-//            return true;
-//        }
-//
-//        @Override
-//        public boolean onSingleTapUp(MotionEvent event) {
-//            // triggers after onDown only for single tap
-//            return true;
-//        }
-//
-//        @Override
-//        public void onLongPress(MotionEvent event) {
-//            // triggers after onDown only for long press
-//            super.onLongPress(event);
-//            Log.d(TAG, "onLongPress: called");
-//            listenerSetup();
-//        }
-//    }
 
+    private class FirstFragmentGestureListener implements GestureDetector.OnGestureListener
+    {
+        public FirstFragmentGestureListener(Context context)
+        {
+
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+
+            Toast.makeText(getContext(), "onLongpress", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+        {
+            if(e1 != null && e2 != null)
+            {
+                if (e2.getY() > e1.getY())
+                {
+                    //down direction
+                    MainActivityUtils.showNavButtonView();
+                    MainActivityUtils.showFab();
+                    MainActivityUtils.showAppBarLayout();
+//                    Toast.makeText(getContext(), "down ", Toast.LENGTH_SHORT).show();
+                }else{
+                    MainActivityUtils.hideNavButtonView();
+                    MainActivityUtils.hideFab();
+                    MainActivityUtils.hideAppBarLayout();
+                }
+            }
+
+
+            return false;
+        }
+    }
 }

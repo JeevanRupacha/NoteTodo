@@ -11,10 +11,10 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_single_item_back"
     android:padding="10dp"
-    android:layout_marginTop="7dp"
-    android:layout_marginBottom="2dp"
+    android:background="@drawable/list_single_item_back"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="7dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp">
 
@@ -42,13 +42,14 @@
     <TextView
         android:id="@+id/priorityTextView"
         style="@style/TextAppearance.AppCompat.Small"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
         android:background="@drawable/circle_back"
         android:gravity="center"
         android:textAlignment="center"
+        android:textSize="10sp"
         android:textColor="@android:color/primary_text_light"
         tools:text="1" />
 
@@ -63,7 +64,7 @@
         android:elevation="100dp"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_baseline_notifications_24"
-        app:tint="@color/materialRed" />
+        app:tint="@color/materialOrange" />
 
 
 </FrameLayout>

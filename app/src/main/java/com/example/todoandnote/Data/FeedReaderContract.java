@@ -24,5 +24,7 @@ public final class FeedReaderContract {
         //database version
         public static final int DATABASE_VERSION = 6;
 
+
+
     }
 }
