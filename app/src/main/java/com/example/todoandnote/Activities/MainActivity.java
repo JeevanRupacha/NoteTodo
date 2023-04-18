@@ -45,7 +45,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity{
 
     //number of pages in fragment
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 1;
     private static final String TAG = "MainActivity_Debug";
 
     //View pager for swapping fragment
@@ -171,17 +171,19 @@ public class MainActivity extends AppCompatActivity{
 
     public void fragmentCreate(String dataType)
     {
+
+        //fragment
+        fragment = new ArrayList<>();
+        fragment.add(new FirstFragment(dataType));
+        fragment.add(new LeftFragment());
+        fragment.add(new RightFragment());
+
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = findViewById(R.id.fragment_pager);
         pagerAdapter = new MainActivity.ScreenSlidePagerAdapter(this, fragment);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(1);
 
-        //fragment
-        fragment = new ArrayList<>();
-        fragment.add(new LeftFragment());
-        fragment.add(new FirstFragment(dataType));
-        fragment.add(new RightFragment());
 
     }
 
@@ -233,6 +235,9 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public Fragment createFragment(int position) {
+//            if(position >= 0){
+//                return fragmentList.get(position);
+//            }
             return fragmentList.get(position);
         }
 
